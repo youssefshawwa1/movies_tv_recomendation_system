@@ -1,10 +1,18 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware # <--- Import this
 import pickle
 from typing import Optional
 from engine import search_by_description, get_recommendations
 # 1. SETUP: Create App and Load the Brain
 app = FastAPI(title="Recommender API")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"], # Allow your React app
+    allow_credentials=True,
+    allow_methods=["*"], # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"], # Allow all headers
+)
 # Load the saved model (The Factory's output)
 with open('recommender_model.pkl', 'rb') as f:
     model_data = pickle.load(f)
@@ -19,13 +27,13 @@ matrix = model_data['matrix']
 
 
 @app.get("/search")
-def search_endpoint(q: str, type: Optional[str] = "All", limit: Optional[int] = 15):
+def search_endpoint(query: str, type: Optional[str] = "All", limit: Optional[int] = 15):
     if limit <= 0 or limit >= 50:
         return {"success": False,
                 "message": "Please provide valid limit"}
     # This calls the logic function above
     results = search_by_description(
-        query=q,
+        query=query,
         knn = knn,
         vectorizer=tfidf,
         df=df,
