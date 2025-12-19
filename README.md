@@ -155,24 +155,24 @@ Once the backend is running, you can also test it directly via the browser or Po
 
 ### 4. Recommend Both Result
 
-![Recommend Both](./images/result_recommend_both.png)
+![Recommend Both Result](./images/result_recommend_both.png)
 
 ### 5. Recommend Movie
 
 #### Text: "Stranger Things"
 
-![Recommend Both](./images/recommend_movie.png)
+![Recommend Movie](./images/recommend_movie.png)
 
 ### 6. Result Recommend Movie
 
-![Recommend Both](./images/result_recommend_movie.png)
+![Result Recommend Movie](./images/result_recommend_movie.png)
 
 ### 7. Python Test
 
 #### Text: "toy story"
 
-![Recommend Both](./images/python_test.png)
+![Python Test](./images/python_test.png)
 
 ### 8. Result Python Test
 
-![Recommend Both](./images/result_python_test.png)
+![Result Python Test](./images/result_python_test.png)
