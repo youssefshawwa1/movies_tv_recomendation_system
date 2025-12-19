@@ -69,37 +69,3 @@ def get_recommendations(title, df, matrix, knn, indices,  k=15, content_type="Al
     except KeyError:
         return f"Movie '{title}' not found in database. Try using the search_by_description function instead!"
     
-
-
-
-
-
-
-
-
-
-# def get_recommendations(title, content_type='All', k=15):
-#     try:
-#         search_term = title.lower()
-#         idx = indices[search_term]
-        
-#         query_vector = tfidf_matrix[idx]
-        
-#         distances, neighbor_indices = knn.kneighbors(query_vector, n_neighbors=50)
-        
-#         candidates = all_titles_clean.iloc[neighbor_indices[0]].copy()
-#         candidates['similarity'] = (1 - distances[0]) * 100
-        
-#         if content_type == 'Movie':
-#             results = candidates[candidates['type'] == 'Movie']
-#         elif content_type == 'TV Show':
-#             results = candidates[candidates['type'] == 'TV Show']
-#         else:
-#             results = candidates
-            
-#         results = results[results['title'].str.lower() != search_term]
-        
-#         return results.head(k)[['title', 'type', 'description', 'similarity']]
-
-#     except KeyError:
-#         return f"Movie '{title}' not found in database. Try using the search_by_description function instead!"
