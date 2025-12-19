@@ -134,3 +134,45 @@ Once the backend is running, you can also test it directly via the browser or Po
 - **React Icons**: For some basic icons.
 - **Tailwind CSS**: For styling and responsive design.
 - **Axios**: For making HTTP requests to the backend API.
+
+## Screenshots
+
+### 1. Search Interface (Search Both)
+
+#### Search Text: "a high school chemistery teacher cancer drug"
+
+![Search Both](./images/search_both.png)
+
+### 2. Search Both Results
+
+![Result Search Both](./images/result_search_both.png)
+
+### 3. Recommend Both
+
+#### Text: "breaking bad"
+
+![Recommend Both](./images/recommend_both.png)
+
+### 4. Recommend Both Result
+
+![Recommend Both](./images/result_recommend_both.png)
+
+### 5. Recommend Movie
+
+#### Text: "Stranger Things"
+
+![Recommend Both](./images/recommend_movie.png)
+
+### 6. Result Recommend Movie
+
+![Recommend Both](./images/result_recommend_movie.png)
+
+### 7. Python Test
+
+#### Text: "toy story"
+
+![Recommend Both](./images/python_test.png)
+
+### 8. Result Python Test
+
+![Recommend Both](./images/result_python_test.png)
