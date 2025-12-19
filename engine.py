@@ -1,6 +1,6 @@
 # engine.py
 from utils import clean_description  # <--- Import the tool
-
+import json
 def search_by_description(query,  df, vectorizer, knn,content_type = "All", k=15):
 
     # cleaning the user_query
@@ -37,8 +37,8 @@ def search_by_description(query,  df, vectorizer, knn,content_type = "All", k=15
         # return, result.head(k) takes the first k rows, and select specific columns from them
         # show_id,type,title,director,cast,country,date_added,release_year,rating,duration,listed_in,description
 
-    return results.head(k)[['title', 'type', 'description', 'similarity', 'director', 'cast', 'country', 'release_year', 'duration', 'listed_in']]
-
+    final_df=  results.head(k)[['title', 'type', 'description', 'similarity', 'director', 'cast', 'country', 'release_year', 'duration', 'listed_in']]
+    return json.loads(final_df.to_json(orient='records'))
 
 
 
@@ -63,7 +63,8 @@ def get_recommendations(title, df, matrix, knn, indices,  k=15, content_type="Al
             
         results = results[results['title'].str.lower() != search_term]
         
-        return results.head(k)[['title', 'type', 'description', 'similarity']]
+        final_df = results.head(k)[['title', 'type', 'description', 'similarity', 'director', 'cast', 'country', 'release_year', 'duration', 'listed_in']]
+        return json.loads(final_df.to_json(orient='records'))
 
     except KeyError:
         return f"Movie '{title}' not found in database. Try using the search_by_description function instead!"
