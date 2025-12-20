@@ -6,6 +6,7 @@ function Home() {
   const apiLink = "http://localhost:8000";
   const [isLoading, setIsLoading] = useState(false);
   const [color, setColor] = useState("red");
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     query: "",
     contentType: "Movie",
@@ -14,9 +15,11 @@ function Home() {
   });
   useEffect(() => {
     setItems(null);
-  }, [formData.contentType]);
+    setError(null);
+  }, [formData.contentType, formData.contentKind]);
   const [items, setItems] = useState(null);
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     try {
       const endpoint =
@@ -27,15 +30,13 @@ function Home() {
       const { data } = await axios.get(
         `${apiLink}/${endpoint}?${paramName}=${formData.query}&type=${formData.contentType}&limit=${formData.limit}`
       );
-      setItems(data.results);
-
-      //   console.log("Results:", data.results);
-      // setData(data.results); // Assuming you have a state setter
+      if (data.success) setItems(data.results);
+      else setError(data.message);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setError("An Error Occured");
     } finally {
       setIsLoading(false);
-      console.log(items);
     }
   };
   const handleInputChange = (e) => {
@@ -53,16 +54,16 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen justify-center p-4">
-      <div className="min-h-screen bg-gradient-to-br  flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full">
+    <div className=" ">
+      <div className=" bg-gradient-to-br  flex items-center justify-center p-4 w-full mb-8 justify-center p-4 mx-auto max-w-130">
+        <div className="max-w-xl w-full ">
           {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3">
+            <h1 className="text-xl  font-bold text-gray-800 mb-3">
               Movie & TV Show{" "}
               <span className={`text-${color}-600`}>Recommender</span>
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 text-md">
               Discover personalized recommendations based on your preferences
             </p>
           </div>
@@ -71,13 +72,15 @@ function Home() {
           <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
             <div className="flex items-center mb-8">
               <div className="p-3 bg-gray-100 rounded-full mr-4">
-                <FaSearch className="text-gray-600 text-2xl" />
+                <FaSearch className="text-gray-600 text-sm" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">
+                <h2 className="text-sm font-bold text-gray-800">
                   Find Your Next Watch
                 </h2>
-                <p className="text-gray-600">Enter what you're looking for</p>
+                <p className="text-gray-600 text-sm">
+                  Enter what you're looking for
+                </p>
               </div>
             </div>
 
@@ -92,7 +95,7 @@ function Home() {
                   What are you looking for?
                 </label>
 
-                <div className="relative">
+                <div className="relative ">
                   <input
                     type="text"
                     id="query"
@@ -104,14 +107,14 @@ function Home() {
                         ? "Enter movie or TV show description/title..."
                         : "Enter movie or TV show title..."
                     }`}
-                    className="w-full px-4 py-3 pl-12 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200"
+                    className="text-sm w-full px-4 py-3 pl-12  border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200"
                     required
                   />
-                  <FaSearch className="absolute left-4 top-4 text-gray-400 text-xl" />
+                  <FaSearch className="absolute left-4 top-5 text-gray-400 text-sm" />
                 </div>
                 <div className="my-4 flex items-center justify-around">
                   <label
-                    className={`flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 w-34 ${
+                    className={`flex items-center justify-center p-2 border-2 rounded-xl cursor-pointer transition-all duration-200 w-34 ${
                       formData.contentKind === "recommend"
                         ? "border-gray-400 bg-gray-50 ring-2 ring-gray-200"
                         : "border-gray-300 hover:border-gray-300"
@@ -126,12 +129,12 @@ function Home() {
                       className="sr-only"
                     />
 
-                    <div className="font-semibold text-gray-800">
-                      Reccomender
+                    <div className="font-semibold text-gray-800 text-sm">
+                      Recommend
                     </div>
                   </label>
                   <label
-                    className={`flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 w-34 ${
+                    className={`flex items-center justify-center p-2 border-2 rounded-xl cursor-pointer transition-all duration-200 w-34 ${
                       formData.contentKind === "find"
                         ? "border-gray-400 bg-gray-50 ring-2 ring-gray-200"
                         : "border-gray-300 hover:border-gray-300"
@@ -145,21 +148,23 @@ function Home() {
                       onChange={handleInputChange}
                       className="sr-only"
                     />
-                    <div className="font-semibold text-gray-800">Find</div>
+                    <div className="font-semibold text-gray-800 text-sm">
+                      Find
+                    </div>
                   </label>
                 </div>
               </div>
 
               {/* Radio Buttons */}
-              <div>
+              <div className="">
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Content Type
                 </label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 ">
                   {/* Movie Option */}
 
                   <label
-                    className={`flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
+                    className={`h-20 text-sm flex items-center justify-center p-2 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
                       formData.contentType === "Movie"
                         ? "border-red-400 bg-red-50 ring-2 ring-red-200"
                         : "border-gray-300 hover:border-gray-300"
@@ -173,7 +178,7 @@ function Home() {
                       onChange={handleInputChange}
                       className="sr-only"
                     />
-                    <div className="flex items-center">
+                    <div className="flex items-center ">
                       <div
                         className={`p-2 rounded-full mr-3 ${
                           formData.contentType === "Movie"
@@ -182,7 +187,7 @@ function Home() {
                         }`}
                       >
                         <FaFilm
-                          className={`text-lg ${
+                          className={` text-sm ${
                             formData.contentType === "Movie"
                               ? "text-red-600"
                               : "text-gray-600"
@@ -190,11 +195,8 @@ function Home() {
                         />
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-800">
+                        <div className="font-semibold text-gray-800 ">
                           Movies
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          Feature films
                         </div>
                       </div>
                     </div>
@@ -202,7 +204,7 @@ function Home() {
 
                   {/* TV Show Option */}
                   <label
-                    className={`flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
+                    className={`text-sm h-20 flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
                       formData.contentType === "TV Show"
                         ? "border-blue-400 bg-blue-50 ring-2 ring-blue-200"
                         : "border-gray-300 hover:border-gray-300"
@@ -225,7 +227,7 @@ function Home() {
                         }`}
                       >
                         <FaTv
-                          className={`text-lg ${
+                          className={`text-sm${
                             formData.contentType === "TV Show"
                               ? "text-blue-600"
                               : "text-gray-600"
@@ -236,16 +238,13 @@ function Home() {
                         <div className="font-semibold text-gray-800">
                           TV Shows
                         </div>
-                        <div className="text-sm text-gray-600">
-                          Series & episodes
-                        </div>
                       </div>
                     </div>
                   </label>
 
                   {/* Both Option */}
                   <label
-                    className={`flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
+                    className={`text-sm h-20 flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
                       formData.contentType === "both"
                         ? "border-purple-400 bg-purple-50 ring-2 ring-purple-200"
                         : "border-gray-300 hover:border-gray-300"
@@ -259,9 +258,9 @@ function Home() {
                       onChange={handleInputChange}
                       className="sr-only"
                     />
-                    <div className="flex items-center">
+                    <div className="flex items-center ">
                       <div
-                        className={`p-2 rounded-full mr-3 ${
+                        className={`p-1 rounded-full mr-3 ${
                           formData.contentType === "both"
                             ? "bg-purple-100"
                             : "bg-gray-100"
@@ -269,14 +268,14 @@ function Home() {
                       >
                         <div className="flex">
                           <FaFilm
-                            className={`m-2 text-lg ${
+                            className={`m-2 text-sm ${
                               formData.contentType === "both"
                                 ? "text-red-600"
                                 : "text-gray-600"
                             }`}
                           />
                           <FaTv
-                            className={`m-2 text-lg ${
+                            className={`m-2 text-sm ${
                               formData.contentType === "both"
                                 ? "text-blue-600"
                                 : "text-gray-600"
@@ -286,9 +285,6 @@ function Home() {
                       </div>
                       <div>
                         <div className="font-semibold text-gray-800">Both</div>
-                        <div className="text-sm text-gray-600">
-                          Movies & TV shows
-                        </div>
                       </div>
                     </div>
                   </label>
@@ -296,10 +292,10 @@ function Home() {
               </div>
 
               {/* Additional Options */}
-              <div className="bg-gray-50 p-4 rounded-xl">
+              <div className="bg-gray-50 p-4 rounded-xl ">
                 <div className="flex items-center mb-2">
                   <span className="text-sm font-medium text-gray-700">
-                    Advanced Options (Optional)
+                    Advanced Options
                   </span>
                   <span className="ml-2 px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">
                     Optional
@@ -329,32 +325,44 @@ function Home() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className={`w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-gray-700 hover:to-${color}-700 transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl flex items-center justify-center`}
+                className={`w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-2 px-2 rounded-xl font-bold text-sm hover:from-gray-700 hover:to-${color}-700 transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl flex items-center justify-center`}
               >
                 <FaSearch className="mr-3" />
                 {formData.contentKind == "find"
                   ? "Find Data"
                   : "Get Recommendation"}
               </button>
-
-              {/* Helper Text */}
-              <p className="text-center text-gray-500 text-sm">
-                Enter a movie or TV show title or description to get
-                personalized recommendations
-              </p>
             </form>
           </div>
         </div>
       </div>
+      <div className=" flex items-center justify-center p-4 w-full mb-8 justify-center p-4 mx-auto max-w-300">
+        {isLoading && (
+          <div className="flex justify-center items-center h-64">
+            <div className="text-center">
+              <div
+                className={`animate-spin rounded-full h-12 w-12 border-b-2 border-${color}-600 mx-auto`}
+              ></div>
+              <p className="mt-4 text-gray-600">Loading recommendations...</p>
+            </div>
+          </div>
+        )}
 
-      {items && (
-        <ContentDisplay
-          title={formData.contentKind.toUpperCase()}
-          isLoading={isLoading}
-          items={items}
-          color={color}
-        />
-      )}
+        {items && !isLoading && color && (
+          <ContentDisplay
+            title={formData.contentKind.toUpperCase()}
+            isLoading={isLoading}
+            items={items}
+            color={color}
+          />
+        )}
+        {error && !isLoading && (
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-8 text-center">
+            <FaFilm className="text-4xl text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700">{error}</h3>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
